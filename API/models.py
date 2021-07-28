@@ -17,7 +17,7 @@ class TimeStampModel(models.Model):
         abstract = True
 
 
-class User(AbstractUser):
+class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.username
@@ -49,20 +49,20 @@ class User(AbstractUser):
         ('HN', '하나은행'),
     ]
 
-    nickname = models.CharField(unique=True, null=False, blank=False)
+    nickname = models.CharField(unique=True, null=False, blank=False, max_length=12)
     profile_img = ProcessedImageField(upload_to=profile_directory_path,
                                       processors=[Thumbnail(300, 300)],
                                       format='JPEG',
                                       options={'quality': 80})
     is_creator = models.BooleanField(null=False, blank=True, default=False)
     channel_url = models.URLField(null=False, blank=True, unique=True)
-    channel_type = models.CharField(null=False, blank=True, choices=channel_type_choices)
+    channel_type = models.CharField(null=False, blank=True, max_length=20, choices=channel_type_choices)
     channel_intro = models.CharField(null=False, blank=True, max_length=20)
-    account_bank = models.CharField(null=False, blank=True, choices=account_bank_choice)
-    account_name = models.CharField(null=False, blank=True)
-    account_num = models.CharField(null=False, blank=True)
+    account_bank = models.CharField(null=False, blank=True, max_length=20, choices=account_bank_choice)
+    account_name = models.CharField(null=False, blank=True, max_length=10)
+    account_num = models.CharField(null=False, blank=True, max_length=20)
 
-    REQUIRED_FIELDS = [nickname]
+    REQUIRED_FIELDS = ['nickname']
 
 
 class Request(TimeStampModel):
@@ -78,11 +78,11 @@ class Request(TimeStampModel):
         ('done', '완료'),
     ]
 
-    users = models.ManyToManyField('User', related_name='users')
-    request_name = models.CharField(null=False, blank=False)
-    request_content = models.CharField(null=False, blank=False)
+    users = models.ManyToManyField('CustomUser', related_name='users')
+    request_name = models.CharField(null=False, blank=False, max_length=20)
+    request_content = models.CharField(null=False, blank=False, max_length=255)
     request_reward = models.PositiveIntegerField(null=False, blank=False, validators=[MinValueValidator(100)])
-    request_status = models.CharField(null=False, blank=False, choices=request_status_choice)
+    request_status = models.CharField(null=False, blank=False, max_length=20, choices=request_status_choice)
     request_duedate = models.DateTimeField(null=False, blank=False)
     creator_YN = models.BooleanField(null=False, blank=False, default=False)
 
