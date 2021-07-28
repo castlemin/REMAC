@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
-import my_setting
+from REMAC import my_setting
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'API',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,8 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'imagekit',
-    'API',
 ]
+
+AUTH_USER_MODEL = 'API.CustomUser'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
