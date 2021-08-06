@@ -1,6 +1,5 @@
 from rest_framework import serializers
-from .models import CustomUser, Request, Product
-
+from .models import CustomUser, Request
 
 bank_choice = [
     ('SH', '신한은행'),
@@ -13,24 +12,55 @@ bank_choice = [
 ]
 
 
-class ProductSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Product
-        fields = '__all__'
-
-
-class RequestSerializer(serializers.ModelSerializer):
+class CreateRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = Request
         fields = '__all__'
 
+    def create(self, validated_data):
+        instance = super(CreateRequestSerializer, self).create(validated_data)
+        instance.users.add(self.context['request'].user)
+        return instance
+
 
 class CustomUserSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = CustomUser
         fields = '__all__'
         extra_kwargs = {"password": {"write_only": True}}
 
 
+class MainpageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'nickname', 'is_creator', 'channel_category', 'channel_url', 'channel_intro', 'profile_image']
 
+
+class ProfileImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['profile_image']
+
+
+
+class CreatorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'nickname', 'profile_image']
+
+
+class UserRequestSerializer(serializers.ModelSerializer):
+    users = CreatorSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Request
+        fields = ['id', 'users', 'request_title', 'created', 'request_status']
+
+
+class UserDetailSerializer(serializers.ModelSerializer):
+    requests = UserRequestSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'username', 'nickname', 'profile_image', 'is_creator', 'channel_category',
+                  'channel_intro', 'bank', 'depositor', 'account', 'requests']

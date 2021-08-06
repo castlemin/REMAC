@@ -1,9 +1,11 @@
 from django.urls import path
-from .views import CustomRegisterView, CustomLogoutView #, CustomLoginView
-from dj_rest_auth.views import LoginView
+from rest_framework_simplejwt.views import TokenRefreshView
+from .views import RegisterView, LoginView, LogoutView, AfterRegisterView
 
 urlpatterns = [
-    path('registration', CustomRegisterView.as_view()),
-    path('login', LoginView.as_view()),
-    path('logout', CustomLogoutView.as_view()),
+    path('register/', RegisterView.as_view()),
+    path('login/', LoginView.as_view()),
+    path('login/refresh/', TokenRefreshView.as_view()),
+    path('logout/', LogoutView.as_view()),
+    path('after_register/', AfterRegisterView.as_view()),
 ]

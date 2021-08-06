@@ -40,18 +40,18 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
     'imagekit',
-    # django-rest-auth
+    # rest-framework
+    'rest_framework',
+    'rest_framework.authtoken',
+    'django_filters',
+    # dj-simplejwt
     'rest_framework_simplejwt',
-    'dj_rest_auth',
-    'dj_rest_auth.registration',
-    # django-all-auth
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
+    'rest_framework_simplejwt.token_blacklist',
     # drf-yasg
     'drf_yasg',
+    # CORS
+    'corsheaders',
 ]
 
 SITE_ID = 1
@@ -61,19 +61,11 @@ AUTH_USER_MODEL = 'API.CustomUser'
 # Authentication Backends
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-# All Auth Settings
-ACCOUNT_EMAIL_REQUIRED = False
-ACCOUNT_UNIQUE_EMAIL = False
-ACCOUNT_AUTHENTICATION_METHOD = 'username'
-ACCOUNT_EMAIL_VERIFICATION = 'none'
-ACCOUNT_PRESERVE_USERNAME_CASING = False
-# ACCOUNT_SIGNUP_REDIRECT_URL = 'URL or URL Name' (default= settings.LOGIN_REDIRECT_URL)
-ACCOUNT_USERNAME_MIN_LENGTH = 6
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -104,36 +96,24 @@ TEMPLATES = [
 WSGI_APPLICATION = 'REMAC.wsgi.application'
 
 REST_FRAMEWORK = {
-    # 'DEFAULT_PERMISSION_CLASSES': (
-    #     'rest_framework.permissions.IsAuthenticated',
-    # ),
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.SessionAuthentication',
-        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
-    ),
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
+    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated',),
+    'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework.authentication.SessionAuthentication',
+                                       'rest_framework.authentication.BasicAuthentication',
+                                       'rest_framework_simplejwt.authentication.JWTAuthentication',),
 }
 
-REST_AUTH_SERIALIZERS = {
-    'LOGIN_SERIALIZER': 'account.serializers.CustomLoginSerializer',
-    'REGISTER_SERIALIZER': 'account.serializers.CustomRegisterSerializer',
-    'TOKEN_SERIALIZER': 'dj_rest_auth.serializers.TokenSerializer',
-    'JWT_SERIALIZER': 'dj_rest_auth.serializers.JWTSerializer'
-}
-
-ACCOUNT_ADAPTER = 'account.adapter.CustomAdapter'
-
-REST_USE_JWT = True
 
 JWT_AUTH_COOKIE = 'my-app-auth'
 
 JWT_AUTH_REFRESH_COOKIE = 'my-refresh-token'
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    'ROTATE_REFRESH_TOKENS': False,
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=2),
+    'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
-    'UPDATE_LAST_LOGIN': False,
+    'UPDATE_LAST_LOGIN': True,
 
     'ALGORITHM': 'HS256',
     'SIGNING_KEY': my_setting.SECRET['secret'],
@@ -206,3 +186,29 @@ MEDIA_URL = '/media/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#CORS SETTINGS
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOW_METHODS = (
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+)
+
+CORS_ALLOW_HEADERS = (
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+)

@@ -55,7 +55,8 @@ class CustomUser(AbstractUser):
     profile_image = ProcessedImageField(upload_to=profile_directory_path,
                                         processors=[Thumbnail(300, 300)],
                                         format='JPEG',
-                                        options={'quality': 80})
+                                        options={'quality': 80},
+                                        default='default/default_img.jpg')
     is_creator = models.BooleanField(null=False, blank=True, default=False)
     channel_url = models.URLField(null=False, blank=True)
     channel_category = models.CharField(null=False, blank=True, max_length=20, choices=channel_category_choices)
@@ -70,23 +71,23 @@ class CustomUser(AbstractUser):
 class Request(TimeStampModel):
 
     def __str__(self):
-        return self.request_name
+        return self.request_title
 
     request_status_choice = [
         ('request', '요청중'),
         ('quit', '취소'),
         ('proceed', '제작중'),
-        ('refuse', '거절'),
+        ('refuse', '반려'),
         ('done', '완료'),
     ]
 
-    users = models.ManyToManyField('CustomUser', related_name='users')
+    users = models.ManyToManyField('CustomUser', related_name='requests')
     request_title = models.CharField(null=False, blank=False, max_length=20)
     request_content = models.CharField(null=False, blank=False, max_length=255)
     request_reward = models.PositiveIntegerField(null=False, blank=False, validators=[MinValueValidator(100)])
     request_status = models.CharField(null=False, blank=False, max_length=20, choices=request_status_choice,
                                       default='request')
-    request_duedate = models.DateTimeField(null=False, blank=False)
+    request_duedate = models.DateField(null=False, blank=False)
     creator_YN = models.BooleanField(null=False, blank=False, default=False)
     refund_bank = models.CharField(null=False, blank=True, max_length=20, choices=bank_choice)
     refund_depositor = models.CharField(null=False, blank=True, max_length=10)
@@ -96,7 +97,7 @@ class Request(TimeStampModel):
 class Product(TimeStampModel):
 
     def __str__(self):
-        return self.request_id.request_name
+        return self.request_id.request_title
 
-    request_id = models.OneToOneField('Request', on_delete=models.CASCADE, related_name='request')
+    request_id = models.OneToOneField('Request', on_delete=models.CASCADE, related_name='product')
     product_url = models.URLField(null=False, blank=False)
