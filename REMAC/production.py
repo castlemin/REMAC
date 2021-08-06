@@ -27,7 +27,7 @@ SECRET_KEY = production_db.SECRET
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['13.124.122.248']
+ALLOWED_HOSTS = ['ec2-3-35-91-232.ap-northeast-2.compute.amazonaws.com']
 
 # Application definition
 
