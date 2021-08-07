@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.http import Http404
+from django.shortcuts import render
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import api_view, permission_classes
 from django_filters.rest_framework import DjangoFilterBackend
@@ -12,6 +13,10 @@ from .serializers import CustomUserSerializer, CreateRequestSerializer, Mainpage
     ProfileImageSerializer, UserDetailSerializer, UserRequestSerializer
 
 User = get_user_model()
+
+
+def index(request):
+    return render(request, 'REMAC/templates/index.html')
 
 
 @api_view(['GET'])
