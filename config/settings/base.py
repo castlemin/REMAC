@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     # CORS
     'corsheaders',
+    'sslserver',
 ]
 
 SITE_ID = 1
@@ -80,7 +81,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
