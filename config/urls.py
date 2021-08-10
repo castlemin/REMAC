@@ -24,8 +24,6 @@ from drf_yasg import openapi
 from rest_framework.routers import DefaultRouter
 from dialog.views import DialogViewset, ProductViewSet
 
-import API.views
-
 router = DefaultRouter()
 router.register(r'dialog', DialogViewset)
 router.register(r'product', ProductViewSet)
@@ -52,7 +50,6 @@ schema_view = get_schema_view(
 urlpatterns = [
                   # api urls
                   path('admin/', admin.site.urls),
-                  path('', API.views.index, name='index'),
                   path('api/', include('API.urls')),
                   path('account/', include('account.urls')),
                   # swagger urls

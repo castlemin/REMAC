@@ -46,16 +46,16 @@ class RegisterSerializer(serializers.Serializer):
         required=True,
         validators=[UniqueValidator(queryset=CustomUser.objects.all(),
                                     message='이미 존재하는 아이디입니다.')])
-    password1 = serializers.CharField(
+    password = serializers.CharField(
         max_length=12,
         min_length=8,
         required=True,
         write_only=True)
-    password2 = serializers.CharField(
-        max_length=12,
-        min_length=8,
-        required=True,
-        write_only=True)
+    # password2 = serializers.CharField(
+    #     max_length=12,
+    #     min_length=8,
+    #     required=True,
+    #     write_only=True)
     nickname = serializers.CharField(
         max_length=12,
         min_length=2,
@@ -74,22 +74,23 @@ class RegisterSerializer(serializers.Serializer):
     depositor = serializers.CharField(allow_blank=True)
     account = serializers.CharField(allow_blank=True)
 
-    def validate(self, data):
-        if data['password1'] != data['password2']:
-            raise serializers.ValidationError(_("입력하신 패스워드가 서로 일치하지 않습니다."))
-        return data
+    # def validate(self, data):
+    #     if data['password1'] != data['password2']:
+    #         raise serializers.ValidationError(_("입력하신 패스워드가 서로 일치하지 않습니다."))
+    #     return data
 
-    def get_tokens_for_user(self, user):
-        refresh = RefreshToken.for_user(user)
-
-        return {
-            'refresh': str(refresh),
-            'access': str(refresh.access_token),
-        }
+    # def get_tokens_for_user(self, user):
+    #     refresh = RefreshToken.for_user(user)
+    #
+    #     return {
+    #         'refresh': str(refresh),
+    #         'access': str(refresh.access_token),
+    #     }
 
     def create(self, validated_data):
         user = UserModel.objects.create(
             username=validated_data['username'],
+            password=validated_data['password'],
             nickname=validated_data['nickname'],
             is_creator=validated_data['is_creator'],
             channel_url=validated_data['channel_url'],
@@ -99,8 +100,7 @@ class RegisterSerializer(serializers.Serializer):
             depositor=validated_data['depositor'],
             account=validated_data['account'],
         )
-        user.set_password(validated_data['password1'])
-        self.get_tokens_for_user(user)
+        user.set_password(validated_data['password'])
         user.save()
         return user
 

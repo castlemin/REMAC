@@ -1,10 +1,9 @@
 from django.contrib.auth import get_user_model
 from django.http import Http404
-from django.shortcuts import render
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import api_view, permission_classes
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.generics import ListAPIView, UpdateAPIView, CreateAPIView, RetrieveAPIView
 from rest_framework.response import Response
 
@@ -13,10 +12,6 @@ from .serializers import CustomUserSerializer, CreateRequestSerializer, Mainpage
     ProfileImageSerializer, UserDetailSerializer, UserRequestSerializer
 
 User = get_user_model()
-
-
-def index(request):
-    return render(request, 'REMAC/templates/index.html')
 
 
 @api_view(['GET'])
@@ -56,7 +51,7 @@ def get_bank_choice(request):
     ]
     return Response(data)
 
-
+# NOT USED
 class CustomUserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
@@ -66,13 +61,18 @@ class CreateRequestView(CreateAPIView):
     queryset = Request.objects.all()
     serializer_class = CreateRequestSerializer
 
+    def create(self, request, *args, **kwargs):
+        serializer = CreateRequestSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid():
+            self.perform_create(serializer)
+            return Response({'201 Created': '요청이 완료되었습니다.'}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class MainpageView(ListAPIView):
-    queryset = CustomUser.objects.all()
+    queryset = CustomUser.objects.filter(is_creator=True)
     serializer_class = MainpageSerializer
     permission_classes = [AllowAny]
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['channel_category', 'is_creator']
 
 
 class ProfileImageView(UpdateAPIView):
@@ -98,14 +98,14 @@ class UserDetailView(RetrieveAPIView):
         except CustomUser.DoesNotExist:
             raise Http404
 
-
+# NOT USED
 class UserRequestView(ListAPIView):
     queryset = Request.objects.all()
     serializer_class = UserRequestSerializer
 
     def get_object(self):
         try:
-            instance = self.queryset.get(self.request.user in users)
+            instance = self.queryset.get(self.request.user in User)
             for i in instance:
                 for user in i["users"]:
                     if user["id"] == self.request.user.pk:
