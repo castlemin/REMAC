@@ -34,21 +34,22 @@ class CustomUser(AbstractUser):
         return self.username
 
     channel_category_choices = [
-        ('fashion', '패션'),
-        ('beauty', '뷰티'),
+        # ('fashion', '패션'),
+        # ('beauty', '뷰티'),
         ('food', '푸드'),
-        ('daily', '일상'),
-        ('asmr', 'ASMR'),
+        # ('daily', '일상'),
+        # ('asmr', 'ASMR'),
         ('game', '게임'),
-        ('animal', '동물'),
-        ('movie', '영화'),
+        # ('animal', '동물'),
+        # ('movie', '영화'),
         ('music', '음악'),
-        ('dance', '춤'),
-        ('sports', '스포츠'),
-        ('tech', '테크'),
-        ('knowledge', '지식'),
-        ('fun', 'FUN'),
-        ('etc', '기타'),
+        # ('dance', '춤'),
+        # ('sports', '스포츠'),
+        # ('tech', '테크'),
+        ('knowledge', '학습'),
+        ('review', '리뷰'),
+        # ('fun', 'FUN'),
+        # ('etc', '기타'),
     ]
 
     nickname = models.CharField(unique=True, null=False, blank=False, max_length=12)
