@@ -105,7 +105,7 @@ class UserRequestSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Request
-        fields = ['id', 'users', 'request_title', 'created', 'request_status']
+        fields = ['id', 'users', 'request_title', 'created', 'request_status', 'request_reward']
 
 
 class UserDetailSerializer(serializers.ModelSerializer):
