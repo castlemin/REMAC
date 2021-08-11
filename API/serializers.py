@@ -36,7 +36,8 @@ class MainpageSerializer(serializers.ModelSerializer):
         fields = ['id', 'nickname', 'is_creator', 'channel_category', 'channel_url', 'channel_intro', 'profile_image']
 
 
-class ProfileImageSerializer(serializers.ModelSerializer):
+class ProfileImageSerializer(serializers.HyperlinkedModelSerializer):
+    profile_image = serializers.ImageField(use_url=True)
     class Meta:
         model = CustomUser
         fields = ['profile_image']
