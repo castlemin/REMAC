@@ -28,6 +28,7 @@ class DialogSerializer(ModelSerializer):
         instance = super().update(instance, validated_data)
         if validated_data['request_status'] == 'proceed':
             instance.proceed_time = timezone.now()
+            instance.save()
         return instance
 
 
