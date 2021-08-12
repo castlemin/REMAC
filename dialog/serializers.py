@@ -31,5 +31,21 @@ class DialogSerializer(ModelSerializer):
             instance.save()
         return instance
 
-
-
+# class RequestForProductSerializer(ModelSerializer):
+#     class Meta:
+#         model = Request
+#         fields = ['id']
+#
+# class ProductRegisterSerializer(ModelSerializer):
+#     request_id = RequestForProductSerializer(read_only=True)
+#
+#     class Meta:
+#         model = Product
+#         fields = ['request_id', 'product_url']
+#
+#     def create(self, validated_data):
+#         instance = super().create(validated_data)
+#         if validated_data["product_url"]:
+#             instance.request_id.request_status = 'done'
+#             instance.save
+#         return instance
