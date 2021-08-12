@@ -93,7 +93,7 @@ class Request(TimeStampModel):
     refund_bank = models.CharField(null=False, blank=True, max_length=20, choices=bank_choice)
     refund_depositor = models.CharField(null=False, blank=True, max_length=10)
     refund_account = models.CharField(null=False, blank=True, max_length=20)
-
+    proceed_time = models.DateTimeField(null=True)
 
 class Product(TimeStampModel):
 

@@ -1,5 +1,6 @@
 from rest_framework.serializers import ModelSerializer
 from API.models import Request, CustomUser, Product
+from django.utils import timezone
 
 
 class DialogUserSerializer(ModelSerializer):
@@ -20,6 +21,14 @@ class DialogSerializer(ModelSerializer):
 
     class Meta:
         model = Request
-        fields = ['id', 'users', 'created', 'updated', 'request_title', 'request_content', 'request_reward',
+        fields = ['id', 'users', 'created', 'updated', 'proceed_time', 'request_title', 'request_content', 'request_reward',
                   'request_status', 'request_duedate', 'creator_YN', 'product']
+
+    def update(self, instance, validated_data):
+        instance = super().update(instance, validated_data)
+        if validated_data['request_status'] == 'proceed':
+            instance.proceed_time = timezone.now()
+        return instance
+
+
 
