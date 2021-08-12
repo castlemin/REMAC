@@ -109,7 +109,7 @@ class RegisterSerializer(serializers.Serializer):
 class AfterRegisterSerialiezer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['id', 'username', 'nickname']
+        fields = ['id', 'username', 'nickname', 'is_creator']
 
 
 # 로그인 serializer
