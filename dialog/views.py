@@ -22,6 +22,6 @@ class ProductViewSet(ModelViewSet):
             self.perform_create(serializer)
             request.request_status = 'done'
             request.save()
-            return Response(status=status.HTTP_201_CREATED)
+            return Response({"결과물이 생성되었습니다."}, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
